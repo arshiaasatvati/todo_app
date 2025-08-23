@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_appp/data/data.dart';
@@ -185,6 +186,7 @@ class HomeScreen extends StatelessWidget {
               child: ValueListenableBuilder<String>(
                 valueListenable: searchKeywordNotifier,
                 builder: (context, value, child) {
+<<<<<<< HEAD:lib/screens/home/home_screen.dart
                   return Consumer<Repository<Task>>(
                     builder: (context, repository, child) {
                       return FutureBuilder<List<Task>>(
@@ -208,6 +210,21 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   );
+=======
+                  if (box.isNotEmpty) {
+                    return ListView.builder(
+                      padding: EdgeInsets.only(bottom: 80, left: 16, right: 16),
+                      physics: BouncingScrollPhysics(),
+                      itemCount: value.values.length,
+                      itemBuilder: (context, index) {
+                        final Task task = box.values.toList()[index];
+                        return TaskItem(themeData: themeData, task: task);
+                      },
+                    );
+                  } else {
+                    return EmptyState();
+                  }
+>>>>>>> fa1a38f (update):lib/home_screen.dart
                 },
               ),
             ),
@@ -218,6 +235,7 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+<<<<<<< HEAD:lib/screens/home/home_screen.dart
 class TaskList extends StatelessWidget {
   const TaskList({super.key, required this.items, required this.themeData});
 
@@ -234,6 +252,20 @@ class TaskList extends StatelessWidget {
         final Task task = items[index];
         return TaskItem(themeData: themeData, task: task);
       },
+=======
+class EmptyState extends StatelessWidget {
+  const EmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset('assets/empty_state.svg', width: 160),
+        SizedBox(height: 8),
+        Text('Your Task List Is Empty...'),
+      ],
+>>>>>>> fa1a38f (update):lib/home_screen.dart
     );
   }
 }

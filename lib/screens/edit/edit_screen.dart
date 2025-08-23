@@ -108,7 +108,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               controller: _controller,
               decoration: InputDecoration(
                 border: InputBorder.none,
-
                 label: Text('Add a task for today...'),
               ),
             ),
