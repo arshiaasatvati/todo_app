@@ -103,10 +103,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
             ),
             TextField(
               controller: _controller,
-              maxLines: null,
               decoration: InputDecoration(
                 border: InputBorder.none,
-
                 label: Text('Add a task for today...'),
               ),
             ),
@@ -140,6 +138,7 @@ class PriorityCheckBox extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           border: Border.all(
             width: 2,
+            // ignore: deprecated_member_use
             color: secondaryTextColor.withOpacity(0.2),
           ),
         ),
@@ -165,7 +164,7 @@ class _CheckBoxShape extends StatelessWidget {
   final bool value;
   final Color color;
 
-  const _CheckBoxShape({super.key, required this.value, required this.color});
+  const _CheckBoxShape({required this.value, required this.color});
 
   @override
   Widget build(BuildContext context) {

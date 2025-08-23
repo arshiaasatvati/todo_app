@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_appp/data.dart';
 import 'package:todo_appp/edit_screen.dart';
@@ -177,21 +178,41 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ValueListenableBuilder<Box<Task>>(
                 valueListenable: box.listenable(),
                 builder: (context, value, child) {
-                  return ListView.builder(
-                    padding: EdgeInsets.only(bottom: 80, left: 16, right: 16),
-                    physics: BouncingScrollPhysics(),
-                    itemCount: value.values.length,
-                    itemBuilder: (context, index) {
-                      final Task task = box.values.toList()[index];
-                      return TaskItem(themeData: themeData, task: task);
-                    },
-                  );
+                  if (box.isNotEmpty) {
+                    return ListView.builder(
+                      padding: EdgeInsets.only(bottom: 80, left: 16, right: 16),
+                      physics: BouncingScrollPhysics(),
+                      itemCount: value.values.length,
+                      itemBuilder: (context, index) {
+                        final Task task = box.values.toList()[index];
+                        return TaskItem(themeData: themeData, task: task);
+                      },
+                    );
+                  } else {
+                    return EmptyState();
+                  }
                 },
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class EmptyState extends StatelessWidget {
+  const EmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset('assets/empty_state.svg', width: 160),
+        SizedBox(height: 8),
+        Text('Your Task List Is Empty...'),
+      ],
     );
   }
 }
