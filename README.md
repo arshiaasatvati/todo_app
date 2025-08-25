@@ -1,6 +1,22 @@
 # todo_appp
 
-A new Flutter project.
+This is  my new project with flutter using Hive NoSQL to build a todo app with CRUD and user friendly UI/UX.
+
+i also used new widgets like ValueListenableBuilder and ValueNotifier.
+
+here are some shots and records of the app design and mechanism:
+
+https://github.com/user-attachments/assets/ca866c95-a29f-4a4b-867c-2d601d5f1d93
+
+
+<img width="320" height="840" alt="Screenshot_1756119760" src="https://github.com/user-attachments/assets/cd6299e8-9e50-4b1f-b2b9-176c132e72ad" />
+<img width="320" height="840" alt="Screenshot_1756119773" src="https://github.com/user-attachments/assets/914bb0af-73eb-4dc9-a237-8291b4852dfb" />
+
+<img width="320" height="840" alt="Screenshot_1756119783" src="https://github.com/user-attachments/assets/3636e2bf-ff5c-4f6b-b99e-c32b718704f5" />
+
+
+
+
 
 ## Getting Started
 
