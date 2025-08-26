@@ -1,12 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+=======
+>>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
 import 'package:provider/provider.dart';
 import 'package:todo_appp/data/data.dart';
 import 'package:todo_appp/data/repo/repository.dart';
 import 'package:todo_appp/screens/edit/edit_screen.dart';
+<<<<<<< HEAD
 import 'package:todo_appp/main.dart';
+=======
+>>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
 import 'package:todo_appp/widgets.dart';
 
 const Color secondaryTextColor = Color(0xffafbed0);
@@ -186,7 +192,10 @@ class HomeScreen extends StatelessWidget {
               child: ValueListenableBuilder<String>(
                 valueListenable: searchKeywordNotifier,
                 builder: (context, value, child) {
+<<<<<<< HEAD
 <<<<<<< HEAD:lib/screens/home/home_screen.dart
+=======
+>>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
                   return Consumer<Repository<Task>>(
                     builder: (context, repository, child) {
                       return FutureBuilder<List<Task>>(
@@ -210,6 +219,7 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   );
+<<<<<<< HEAD
 =======
                   if (box.isNotEmpty) {
                     return ListView.builder(
@@ -225,6 +235,8 @@ class HomeScreen extends StatelessWidget {
                     return EmptyState();
                   }
 >>>>>>> fa1a38f (update):lib/home_screen.dart
+=======
+>>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
                 },
               ),
             ),
@@ -235,7 +247,10 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD:lib/screens/home/home_screen.dart
+=======
+>>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
 class TaskList extends StatelessWidget {
   const TaskList({super.key, required this.items, required this.themeData});
 
@@ -252,6 +267,7 @@ class TaskList extends StatelessWidget {
         final Task task = items[index];
         return TaskItem(themeData: themeData, task: task);
       },
+<<<<<<< HEAD
 =======
 class EmptyState extends StatelessWidget {
   const EmptyState({super.key});
@@ -266,6 +282,8 @@ class EmptyState extends StatelessWidget {
         Text('Your Task List Is Empty...'),
       ],
 >>>>>>> fa1a38f (update):lib/home_screen.dart
+=======
+>>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
     );
   }
 }
