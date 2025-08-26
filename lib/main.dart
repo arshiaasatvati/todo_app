@@ -1,10 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo_appp/data.dart';
-import 'package:todo_appp/home_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_appp/data/data.dart';
+import 'package:todo_appp/data/repo/repository.dart';
+import 'package:todo_appp/data/src/hive_task_source.dart';
+import 'package:todo_appp/screens/home/home_screen.dart';
 
 const taskBoxName = 'tasks';
 
@@ -21,7 +23,14 @@ void main() async {
     const SystemUiOverlayStyle(statusBarColor: primaryContainerColor),
   );
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider<Repository<Task>>(
+      create: (context) => Repository<Task>(
+        localDataSource: HiveTaskDataSource(box: Hive.box(taskBoxName)),
+      ),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
