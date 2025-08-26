@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo_appp/data.dart';
-import 'package:todo_appp/edit_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_appp/data/data.dart';
+import 'package:todo_appp/data/repo/repository.dart';
+import 'package:todo_appp/screens/edit/edit_screen.dart';
 import 'package:todo_appp/main.dart';
+import 'package:todo_appp/widgets.dart';
 
 const Color secondaryTextColor = Color(0xffafbed0);
 const Color primaryColor = Color(0xff794CFF);
@@ -21,7 +23,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final Box<Task> box = Hive.box<Task>(taskBoxName);
     return Scaffold(
       // ignore: deprecated_member_use
       backgroundColor: themeData.colorScheme.background,
@@ -147,7 +148,11 @@ class HomeScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      box.clear();
+                      final repository = Provider.of<Repository<Task>>(
+                        context,
+                        listen: false,
+                      );
+                      repository.deleteAll();
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -180,36 +185,27 @@ class HomeScreen extends StatelessWidget {
               child: ValueListenableBuilder<String>(
                 valueListenable: searchKeywordNotifier,
                 builder: (context, value, child) {
-                  return ValueListenableBuilder<Box<Task>>(
-                    valueListenable: box.listenable(),
-                    builder: (context, box, child) {
-                      final List<Task> items;
-                      if (controller.text.isEmpty) {
-                        items = box.values.toList();
-                      } else {
-                        items = box.values
-                            .where(
-                              (task) => task.name.contains(controller.text),
-                            )
-                            .toList();
-                      }
-                      if (items.isNotEmpty) {
-                        return ListView.builder(
-                          padding: EdgeInsets.only(
-                            bottom: 80,
-                            left: 16,
-                            right: 16,
-                          ),
-                          physics: BouncingScrollPhysics(),
-                          itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            final Task task = items[index];
-                            return TaskItem(themeData: themeData, task: task);
-                          },
-                        );
-                      } else {
-                        return EmptyState();
-                      }
+                  return Consumer<Repository<Task>>(
+                    builder: (context, repository, child) {
+                      return FutureBuilder<List<Task>>(
+                        future: repository.getAll(
+                          searchKeyword: controller.text,
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data!.isNotEmpty) {
+                              return TaskList(
+                                items: snapshot.data!,
+                                themeData: themeData,
+                              );
+                            } else {
+                              return EmptyState();
+                            }
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        },
+                      );
                     },
                   );
                 },
@@ -222,18 +218,22 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class EmptyState extends StatelessWidget {
-  const EmptyState({super.key});
+class TaskList extends StatelessWidget {
+  const TaskList({super.key, required this.items, required this.themeData});
+
+  final List<Task> items;
+  final ThemeData themeData;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset('assets/empty_state.svg', width: 160),
-        SizedBox(height: 8),
-        Text('Your Task List Is Empty...'),
-      ],
+    return ListView.builder(
+      padding: EdgeInsets.only(bottom: 80, left: 16, right: 16),
+      physics: BouncingScrollPhysics(),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final Task task = items[index];
+        return TaskItem(themeData: themeData, task: task);
+      },
     );
   }
 }
@@ -306,7 +306,11 @@ class _TaskItemState extends State<TaskItem> {
                 children: [
                   InkWell(
                     onTap: () {
-                      widget.task.delete();
+                      final repository = Provider.of<Repository<Task>>(
+                        context,
+                        listen: false,
+                      );
+                      repository.delete(widget.task);
                     },
                     child: Icon(
                       Icons.delete,
@@ -346,40 +350,6 @@ class _TaskItemState extends State<TaskItem> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class CustomCheckBox extends StatelessWidget {
-  final bool value;
-  final GestureTapCallback onTap;
-
-  const CustomCheckBox({super.key, required this.value, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(left: 8, right: 16),
-        width: 24,
-        height: 24,
-        decoration: BoxDecoration(
-          color: value ? primaryColor : null,
-          borderRadius: BorderRadius.circular(12),
-          border: value
-              ? null
-              : Border.all(width: 2, color: secondaryTextColor),
-        ),
-        child: value
-            ? Icon(
-                CupertinoIcons.check_mark,
-                color: themeData.colorScheme.onPrimary,
-                size: 14,
-              )
-            : null,
       ),
     );
   }

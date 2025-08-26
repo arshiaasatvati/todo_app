@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo_appp/data.dart';
-import 'package:todo_appp/home_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_appp/data/data.dart';
+import 'package:todo_appp/data/repo/repository.dart';
+import 'package:todo_appp/screens/home/home_screen.dart';
 import 'package:todo_appp/main.dart';
+import 'package:todo_appp/widgets.dart';
 
 class EditTaskScreen extends StatefulWidget {
   final Task task;
@@ -35,12 +38,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         onPressed: () {
           widget.task.name = _controller.text;
           widget.task.priority = widget.task.priority;
-          if (widget.task.isInBox) {
-            widget.task.save();
-          } else {
-            final Box<Task> box = Hive.box(taskBoxName);
-            box.add(widget.task);
-          }
+          final repository = Provider.of<Repository<Task>>(
+            context,
+            listen: false,
+          );
+
+          repository.createOrUpdate(widget.task);
 
           Navigator.of(context).pop();
         },
@@ -112,78 +115,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class PriorityCheckBox extends StatelessWidget {
-  final String label;
-  final Color color;
-  final bool isSelected;
-  final GestureTapCallback onTap;
-  const PriorityCheckBox({
-    super.key,
-    required this.label,
-    required this.color,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        height: 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(
-            width: 2,
-            // ignore: deprecated_member_use
-            color: secondaryTextColor.withOpacity(0.2),
-          ),
-        ),
-        child: Stack(
-          children: [
-            Center(child: Text(label)),
-            Positioned(
-              right: 8,
-              top: 0,
-              bottom: 0,
-              child: Center(
-                child: _CheckBoxShape(value: isSelected, color: color),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CheckBoxShape extends StatelessWidget {
-  final bool value;
-  final Color color;
-
-  const _CheckBoxShape({required this.value, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-    return Container(
-      width: 16,
-      height: 16,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: color,
-      ),
-      child: value
-          ? Icon(
-              CupertinoIcons.check_mark,
-              size: 12,
-              color: themeData.colorScheme.onPrimary,
-            )
-          : null,
     );
   }
 }
