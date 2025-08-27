@@ -5,6 +5,7 @@ and i Added dependency injection using Provider.
 and now i used BloC StateManagement for this app using flutter_bloc package
 
 i also used new widgets like ValueListenableBuilder and ValueNotifier.
+but now i used provider and bloc instead of valueListenableBuilder and ValueNotifier. now i used ChangeNotifierProvider and BlocBuilder.
 
 here are some shots and records of the app design and mechanism:
 
