@@ -2,6 +2,7 @@
 
 This is  my new project with flutter using Hive NoSQL to build a todo app with CRUD and user friendly UI/UX.
 and i Added dependency injection using Provider.
+and now i used BloC StateManagement for this app using flutter_bloc package
 
 i also used new widgets like ValueListenableBuilder and ValueNotifier.
 

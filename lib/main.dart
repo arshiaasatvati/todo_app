@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_appp/data/data.dart';
 import 'package:todo_appp/data/repo/repository.dart';
 import 'package:todo_appp/data/src/hive_task_source.dart';
+import 'package:todo_appp/screens/home/bloc/task_list_bloc.dart';
 import 'package:todo_appp/screens/home/home_screen.dart';
 
 const taskBoxName = 'tasks';
@@ -24,10 +26,19 @@ void main() async {
   );
 
   runApp(
-    ChangeNotifierProvider<Repository<Task>>(
-      create: (context) => Repository<Task>(
-        localDataSource: HiveTaskDataSource(box: Hive.box(taskBoxName)),
-      ),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Repository<Task>>(
+          create: (context) => Repository<Task>(
+            localDataSource: HiveTaskDataSource(box: Hive.box(taskBoxName)),
+          ),
+        ),
+        BlocProvider<TaskListBloc>(
+          create: (context) => TaskListBloc(
+            Provider.of<Repository<Task>>(context, listen: false),
+          ),
+        ),
+      ],
       child: const MyApp(),
     ),
   );

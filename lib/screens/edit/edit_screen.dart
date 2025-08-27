@@ -1,17 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:hive_flutter/hive_flutter.dart';
-=======
->>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
 import 'package:provider/provider.dart';
 import 'package:todo_appp/data/data.dart';
 import 'package:todo_appp/data/repo/repository.dart';
 import 'package:todo_appp/screens/home/home_screen.dart';
-<<<<<<< HEAD
-import 'package:todo_appp/main.dart';
-=======
->>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
 import 'package:todo_appp/widgets.dart';
 
 class EditTaskScreen extends StatefulWidget {

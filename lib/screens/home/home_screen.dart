@@ -1,18 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-=======
->>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_appp/data/data.dart';
 import 'package:todo_appp/data/repo/repository.dart';
 import 'package:todo_appp/screens/edit/edit_screen.dart';
-<<<<<<< HEAD
-import 'package:todo_appp/main.dart';
-=======
->>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
+import 'package:todo_appp/screens/home/bloc/task_list_bloc.dart';
 import 'package:todo_appp/widgets.dart';
 
 const Color secondaryTextColor = Color(0xffafbed0);
@@ -25,7 +18,6 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final TextEditingController controller = TextEditingController();
-  final ValueNotifier<String> searchKeywordNotifier = ValueNotifier('');
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +92,9 @@ class HomeScreen extends StatelessWidget {
                       child: TextField(
                         controller: controller,
                         onChanged: (value) {
-                          searchKeywordNotifier.value = value;
+                          context.read<TaskListBloc>().add(
+                            TaskListSearch(searchWord: value),
+                          );
                         },
                         style: TextStyle(fontSize: 18),
                         cursorHeight: 24,
@@ -155,11 +149,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      final repository = Provider.of<Repository<Task>>(
-                        context,
-                        listen: false,
-                      );
-                      repository.deleteAll();
+                      context.read<TaskListBloc>().add(TaskListDeleteAll());
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -189,54 +179,28 @@ class HomeScreen extends StatelessWidget {
             ),
 
             Expanded(
-              child: ValueListenableBuilder<String>(
-                valueListenable: searchKeywordNotifier,
-                builder: (context, value, child) {
-<<<<<<< HEAD
-<<<<<<< HEAD:lib/screens/home/home_screen.dart
-=======
->>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
-                  return Consumer<Repository<Task>>(
-                    builder: (context, repository, child) {
-                      return FutureBuilder<List<Task>>(
-                        future: repository.getAll(
-                          searchKeyword: controller.text,
-                        ),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data!.isNotEmpty) {
-                              return TaskList(
-                                items: snapshot.data!,
-                                themeData: themeData,
-                              );
-                            } else {
-                              return EmptyState();
-                            }
-                          } else {
-                            return CircularProgressIndicator();
-                          }
-                        },
-                      );
+              child: Consumer<Repository<Task>>(
+                builder: (context, model, child) {
+                  context.read<TaskListBloc>().add(TaskListStarted());
+                  return BlocBuilder<TaskListBloc, TaskListState>(
+                    builder: (context, state) {
+                      if (state is TaskListSuccess) {
+                        return TaskList(
+                          items: state.items,
+                          themeData: themeData,
+                        );
+                      } else if (state is TaskListEmpty) {
+                        return EmptyState();
+                      } else if (state is TaskListLoading ||
+                          state is TaskListInitial) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (state is TaskListError) {
+                        return Center(child: Text(state.errorMessage));
+                      } else {
+                        throw Exception('state is not valid');
+                      }
                     },
                   );
-<<<<<<< HEAD
-=======
-                  if (box.isNotEmpty) {
-                    return ListView.builder(
-                      padding: EdgeInsets.only(bottom: 80, left: 16, right: 16),
-                      physics: BouncingScrollPhysics(),
-                      itemCount: value.values.length,
-                      itemBuilder: (context, index) {
-                        final Task task = box.values.toList()[index];
-                        return TaskItem(themeData: themeData, task: task);
-                      },
-                    );
-                  } else {
-                    return EmptyState();
-                  }
->>>>>>> fa1a38f (update):lib/home_screen.dart
-=======
->>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
                 },
               ),
             ),
@@ -247,10 +211,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD:lib/screens/home/home_screen.dart
-=======
->>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
 class TaskList extends StatelessWidget {
   const TaskList({super.key, required this.items, required this.themeData});
 
@@ -267,23 +227,6 @@ class TaskList extends StatelessWidget {
         final Task task = items[index];
         return TaskItem(themeData: themeData, task: task);
       },
-<<<<<<< HEAD
-=======
-class EmptyState extends StatelessWidget {
-  const EmptyState({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset('assets/empty_state.svg', width: 160),
-        SizedBox(height: 8),
-        Text('Your Task List Is Empty...'),
-      ],
->>>>>>> fa1a38f (update):lib/home_screen.dart
-=======
->>>>>>> e3a028d66c4a78c4a59163f2c8c11ae0cebfcf14
     );
   }
 }
@@ -356,11 +299,9 @@ class _TaskItemState extends State<TaskItem> {
                 children: [
                   InkWell(
                     onTap: () {
-                      final repository = Provider.of<Repository<Task>>(
-                        context,
-                        listen: false,
+                      context.read<TaskListBloc>().add(
+                        TaskListDelete(task: widget.task),
                       );
-                      repository.delete(widget.task);
                     },
                     child: Icon(
                       Icons.delete,
