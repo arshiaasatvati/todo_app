@@ -3,6 +3,8 @@
 This is  my new project with flutter using Hive NoSQL to build a todo app with CRUD and user friendly UI/UX.
 and i Added dependency injection using Provider.
 and now i used BloC StateManagement for this app using flutter_bloc package
+used both Bloc and Cubit in this project to better maintainability and testing;
+because it was training for me, i used Bloc on HomeScreen and Cubit for EditScreen.
 
 i also used new widgets like ValueListenableBuilder and ValueNotifier.
 but now i used provider and bloc instead of valueListenableBuilder and ValueNotifier. now i used ChangeNotifierProvider and BlocBuilder.

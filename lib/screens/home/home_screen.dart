@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_appp/data/data.dart';
 import 'package:todo_appp/data/repo/repository.dart';
+import 'package:todo_appp/screens/edit/cubit/edit_task_cubit.dart';
 import 'package:todo_appp/screens/edit/edit_screen.dart';
 import 'package:todo_appp/screens/home/bloc/task_list_bloc.dart';
 import 'package:todo_appp/widgets.dart';
@@ -31,7 +32,11 @@ class HomeScreen extends StatelessWidget {
           Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => EditTaskScreen(task: Task()),
+              builder: (context) => BlocProvider<EditTaskCubit>(
+                create: (context) =>
+                    EditTaskCubit(Task(), context.read<Repository<Task>>()),
+                child: EditTaskScreen(),
+              ),
             ),
           );
         },
@@ -314,8 +319,13 @@ class _TaskItemState extends State<TaskItem> {
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) =>
-                              EditTaskScreen(task: widget.task),
+                          builder: (context) => BlocProvider<EditTaskCubit>(
+                            create: (context) => EditTaskCubit(
+                              widget.task,
+                              context.read<Repository<Task>>(),
+                            ),
+                            child: EditTaskScreen(),
+                          ),
                         ),
                       );
                     },
